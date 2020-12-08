@@ -1,29 +1,32 @@
-import React,{useReducer} from 'react';
+import React,{useReducer,useState} from 'react';
 import reducer,{initialState} from '../reducers/reducer'
 import {setCompleted, setNewItem} from '../actions/action'
 import AddTodo from './AddTodo'
 
 const Todo = () => {
 const [state,dispatch] = useReducer(reducer,initialState);
-
+const [inputValue,setInputValue] = useState('')
 const handleChange = (e) =>{
 
-dispatch(setNewItem(e.target.value))
-}
-// console.log(state)
-const submitHandler = (e) =>{
+setInputValue(e.target.value);
 
+}
+
+const submitHandler = (e) =>{
+    e.preventDefault();
+    dispatch(setNewItem({item:inputValue,id:Date.now(),completed:false}))
 }
     return (
         <div>
-            <form onSubmit={submitHandler}>
-                <input type = "text"  onChange={handleChange} />
+            <pre>{JSON.stringify(state,null,2)}</pre>
+            <form>
+                <input type = "text" value={inputValue} onChange={handleChange} />
                
-                <button>Add a new task</button>
+                <button onClick={submitHandler}>Add a new task</button>
             </form>
-            {/* {state.map(item=>{
-                return  <AddTodo key={item.id} state = {item}/>
-            })} */}
+            
+              <AddTodo state = {state} dispatch={dispatch}/>
+          
            
         </div>
 
